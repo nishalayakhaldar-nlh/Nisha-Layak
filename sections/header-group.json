@@ -52,10 +52,22 @@
         "padding_top": 20,
         "padding_bottom": 20
       }
+    },
+    "custom_banner_xPi7pY": {
+      "type": "custom-banner",
+      "name": "Custom Gift Banner",
+      "settings": {
+        "heading": "The Gift Guide",
+        "description": "Discover joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved one this holiday season.",
+        "button_label": "Shop Now",
+        "button_link": "shopify://collections/all",
+        "banner_image": "shopify://shop_images/without-content-please.png"
+      }
     }
   },
   "order": [
     "announcement-bar",
-    "header"
+    "header",
+    "custom_banner_xPi7pY"
   ]
 }
