@@ -1,8 +1,33 @@
-<section class="custom-gift-banner">
+{% if request.page_type == 'index' %}
+<section class="custom-gift-banner" id="CustomGiftBanner-{{ section.id }}">
   <div class="custom-gift-banner__content">
-    
+
+    {% if section.settings.banner_image != blank %}
+      <div class="custom-gift-banner__image">
+        {{
+          section.settings.banner_image
+          | image_url: width: 2000
+          | image_tag:
+            loading: 'eager',
+            widths: '600, 900, 1200, 1500, 1800, 2000',
+            sizes: '100vw'
+        }}
+      </div>
+    {% endif %}
+
+    <div class="custom-gift-banner__overlay"></div>
+
     <div class="custom-gift-banner__text">
-      <h1>{{ section.settings.heading }}</h1>
+
+      {% if section.settings.top_label != blank %}
+        <div class="custom-gift-banner__label">
+          {{ section.settings.top_label }}
+        </div>
+      {% endif %}
+
+      {% if section.settings.heading != blank %}
+        <h1>{{ section.settings.heading }}</h1>
+      {% endif %}
 
       {% if section.settings.description != blank %}
         <p>{{ section.settings.description }}</p>
@@ -10,25 +35,22 @@
 
       {% if section.settings.button_label != blank %}
         <a
-          href="{{ section.settings.button_link }}"
+          href="{{ section.settings.button_link | default: '#' }}"
           class="custom-gift-banner__button"
+          {% if section.settings.button_link == blank %}
+            aria-disabled="true"
+          {% endif %}
         >
-          {{ section.settings.button_label }}
-          <span>→</span>
+          <span>{{ section.settings.button_label }}</span>
+          <span class="custom-gift-banner__button-arrow">→</span>
         </a>
       {% endif %}
+
     </div>
 
-    {% if section.settings.banner_image != blank %}
-      <div class="custom-gift-banner__image">
-        {{
-          section.settings.banner_image
-          | image_url: width: 1800
-          | image_tag:
-            loading: 'eager',
-            widths: '600, 900, 1200, 1500, 1800',
-            sizes: '100vw'
-        }}
+    {% if section.settings.badge_text != blank %}
+      <div class="custom-gift-banner__badge">
+        {{ section.settings.badge_text }}
       </div>
     {% endif %}
 
@@ -36,27 +58,61 @@
 </section>
 
 <style>
-  .custom-gift-banner {
+  #CustomGiftBanner-{{ section.id }} {
     width: 100%;
     overflow: hidden;
-    background: #f7f7f5;
   }
 
-  .custom-gift-banner__content {
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__content {
     position: relative;
     min-height: 560px;
     display: flex;
     align-items: center;
     padding: 70px 7%;
+    overflow: hidden;
   }
 
-  .custom-gift-banner__text {
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__image {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.05);
+    pointer-events: none;
+  }
+
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__text {
     position: relative;
     z-index: 2;
     width: 48%;
   }
 
-  .custom-gift-banner__text h1 {
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__label {
+    display: inline-block;
+    margin-bottom: 22px;
+    padding: 10px 16px;
+    background: #e53935;
+    color: #fff;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__text h1 {
     margin: 0 0 25px;
     font-size: clamp(42px, 5vw, 76px);
     line-height: 0.98;
@@ -64,7 +120,7 @@
     color: #000;
   }
 
-  .custom-gift-banner__text p {
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__text p {
     max-width: 500px;
     margin: 0 0 30px;
     font-size: 17px;
@@ -72,10 +128,12 @@
     color: #222;
   }
 
-  .custom-gift-banner__button {
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__button {
     display: inline-flex;
     align-items: center;
+    justify-content: space-between;
     gap: 30px;
+    min-width: 170px;
     padding: 15px 24px;
     background: #000;
     color: #fff;
@@ -83,51 +141,89 @@
     font-size: 14px;
     font-weight: 600;
     text-transform: uppercase;
+    overflow: hidden;
+    transition:
+      background 0.25s ease,
+      transform 0.25s ease;
   }
 
-  .custom-gift-banner__button span {
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__button-arrow {
+    display: inline-block;
     font-size: 20px;
     line-height: 1;
+    transition: transform 0.3s ease;
   }
 
-  .custom-gift-banner__image {
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__button:hover {
+    transform: translateY(-3px);
+    background: #e53935;
+  }
+
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__button:hover
+  .custom-gift-banner__button-arrow {
+    transform: translateX(8px);
+  }
+
+  #CustomGiftBanner-{{ section.id }} .custom-gift-banner__badge {
     position: absolute;
-    inset: 0;
-    z-index: 1;
-  }
-
-  .custom-gift-banner__image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    right: 7%;
+    top: 10%;
+    z-index: 2;
+    padding: 10px 16px;
+    background: #e53935;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
   }
 
   @media screen and (max-width: 749px) {
-    .custom-gift-banner__content {
-      min-height: 520px;
-      padding: 45px 25px;
+    #CustomGiftBanner-{{ section.id }} .custom-gift-banner__content {
+      min-height: 620px;
+      padding: 40px 24px;
       align-items: flex-end;
     }
 
-    .custom-gift-banner__text {
+    #CustomGiftBanner-{{ section.id }} .custom-gift-banner__text {
       width: 100%;
     }
 
-    .custom-gift-banner__text h1 {
-      font-size: 46px;
+    #CustomGiftBanner-{{ section.id }} .custom-gift-banner__text h1 {
+      font-size: 44px;
     }
 
-    .custom-gift-banner__text p {
+    #CustomGiftBanner-{{ section.id }} .custom-gift-banner__text p {
       font-size: 15px;
+      line-height: 1.5;
+    }
+
+    #CustomGiftBanner-{{ section.id }} .custom-gift-banner__badge {
+      right: 24px;
+      top: 24px;
+    }
+
+    #CustomGiftBanner-{{ section.id }} .custom-gift-banner__label {
+      font-size: 11px;
+    }
+
+    #CustomGiftBanner-{{ section.id }} .custom-gift-banner__button {
+      width: auto;
     }
   }
 </style>
+
+{% endif %}
 
 {% schema %}
 {
   "name": "Custom Gift Banner",
   "settings": [
+    {
+      "type": "text",
+      "id": "top_label",
+      "label": "Red label text",
+      "default": "Gift Guide"
+    },
     {
       "type": "text",
       "id": "heading",
@@ -150,6 +246,12 @@
       "type": "url",
       "id": "button_link",
       "label": "Button link"
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Red badge text",
+      "default": "New Collection"
     },
     {
       "type": "image_picker",
