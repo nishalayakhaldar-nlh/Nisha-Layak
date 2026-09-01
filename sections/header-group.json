@@ -61,7 +61,7 @@
         "heading": "The Gift Guide",
         "description": "Discover joy: Your Ultimate Holiday Gift Destination. Explore our curated selection and find the perfect gifts to delight your loved one this holiday season.",
         "button_label": "Shop Now",
-        "button_link": "shopify://collections",
+        "button_link": "shopify://collections/all",
         "badge_text": "New Collection",
         "banner_image": "shopify://shop_images/without-content-please.png"
       }
