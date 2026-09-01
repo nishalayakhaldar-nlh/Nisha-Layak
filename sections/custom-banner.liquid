@@ -1,3 +1,4 @@
+{% if request.page_type == 'index' %}
 <section class="custom-gift-banner" id="CustomGiftBanner-{{ section.id }}">
   <div class="custom-gift-banner__content">
 
@@ -210,6 +211,8 @@
     }
   }
 </style>
+
+{% endif %}
 
 {% schema %}
 {
